@@ -2,6 +2,7 @@
 
 const User = require('../models/user');
 const service = require('../services');
+const Utils = require('./utils');
 
 function signUp(req, res) {
   const user = new User({
@@ -10,15 +11,21 @@ function signUp(req, res) {
     password: req.body.password,
   });
 
-  user.save(err => {
-    if (err) return res.status(500).send({
-      message: `Error al crear el usuario: ${err}`
-    });
+  if (Utils.checkUserNotNull(user)) {
+    user.save(err => {
+      if (err) return res.status(500).send({
+        message: `Error al crear el usuario: ${err}`
+      });
 
-    return res.status(201).send({
-      token: service.createToken(user)
+      return res.status(201).send({
+        token: service.createToken(user)
+      });
     });
-  });
+  } else {
+    res.status(500).send({
+      message: "Error al crear el usuario"
+    });
+  }
 }
 
 function signIn(req, res) {
