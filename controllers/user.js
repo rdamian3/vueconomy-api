@@ -13,13 +13,15 @@ function signUp(req, res) {
 
   if (Utils.checkUserNotNull(user)) {
     user.save(err => {
-      if (err) return res.status(500).send({
-        message: `Error al crear el usuario: ${err}`
-      });
-
-      return res.status(201).send({
-        token: service.createToken(user)
-      });
+      if (err) {
+        return res.status(500).send({
+          message: `Error al crear el usuario: ${err}`
+        });
+      } else {
+        return res.status(201).send({
+          token: service.createToken(user)
+        });
+      }
     });
   } else {
     res.status(500).send({
