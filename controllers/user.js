@@ -14,6 +14,9 @@ function signUp(req, res) {
   if (Utils.checkUserNotNull(user)) {
     user.save(err => {
       if (err) {
+        if (err.code == 11000) {
+          return res.status(500).send("Error al crear el usuario: Usuario duplicado");
+        }
         return res.status(500).send({
           message: `Error al crear el usuario: ${err}`
         });
