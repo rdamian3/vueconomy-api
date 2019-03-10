@@ -5,11 +5,10 @@ const service = require('../services');
 const Utils = require('./utils');
 
 function signUp(req, res) {
-  const user = new User({
-    email: req.body.email,
-    displayName: req.body.displayName,
-    password: req.body.password
-  });
+  const user = new User();
+  user.email = req.body.email;
+  user.displayName = req.body.displayName;
+  user.password = req.body.password;
 
   if (user.email != '' || user.email != null) {
     user.save(err => {
@@ -43,7 +42,7 @@ function signIn(req, res) {
       message: 'Falta usuario o contraseña...'
     });
   } else {
-    User.find(
+    user.find(
       {
         email: req.body.email
       },

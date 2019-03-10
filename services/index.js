@@ -8,7 +8,9 @@ function createToken(user) {
   const payload = {
     sub: user._id,
     iat: moment().unix(),
-    exp: moment().add(14, 'days').unix(),
+    exp: moment()
+      .add(14, 'days')
+      .unix()
   };
 
   return jwt.encode(payload, config.SECRET_TOKEN);
@@ -22,14 +24,14 @@ function decodeToken(token) {
       if (payload.exp <= moment().unix()) {
         reject({
           status: 401,
-          message: 'El token ha expirado',
+          message: 'Token has expired'
         });
       }
       resolve(payload.sub);
     } catch (err) {
       reject({
         status: 500,
-        message: 'Token inválido',
+        message: 'Invalid Token'
       });
     }
   });
@@ -39,5 +41,5 @@ function decodeToken(token) {
 
 module.exports = {
   createToken,
-  decodeToken,
+  decodeToken
 };
