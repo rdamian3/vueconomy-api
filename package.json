@@ -17,7 +17,7 @@
     "express-handlebars": "^3.0.0",
     "jwt-simple": "^0.5.1",
     "moment": "^2.16.0",
-    "mongoose": "^4.6.0"
+    "mongoose": "^5.4.19"
   },
   "devDependencies": {
     "nodemon": "^1.10.2"
