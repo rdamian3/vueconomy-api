@@ -42,7 +42,7 @@ function signIn(req, res) {
       message: 'Falta usuario o contraseña...'
     });
   } else {
-    user.find(
+    User.find(
       {
         email: req.body.email
       },
