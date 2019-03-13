@@ -37,7 +37,8 @@ function saveMovement(req, res) {
   let movement = new Movement();
   movement.amount = req.body.amount;
   movement.description = req.body.description;
-  movement.category = req.body.category;
+  movement.category.name = req.body.category.name;
+  movement.category.icon = req.body.category.icon;
   movement.date = req.body.date;
   movement.owner = req.body.email;
 
