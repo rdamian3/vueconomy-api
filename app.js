@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const hbs = require('express-handlebars')
 const app = express()
 const api = require('./routes')
+const morgan = require('morgan');
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', "*");
@@ -12,6 +13,8 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 })
+
+app.use(morgan('dev'))
 
 app.use(bodyParser.urlencoded({
   extended: false
