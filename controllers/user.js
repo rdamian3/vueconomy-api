@@ -68,6 +68,34 @@ function signIn(req, res) {
   }
 }
 
+function deleteUser(req, res) {
+  if (req.body.userId != "") {
+    User.findById(req.body.userId, (err, user) => {
+      if (err) {
+        res.status(500).send({ message: `Error while deleting user: ${err}` });
+      } else {
+
+        if (user != null) {
+          user.remove(err => {
+            if (err) {
+              res
+                .status(500)
+                .send({ message: `Error while deleting user: ${err}` });
+            } else {
+              res.status(200).send({ message: 'User eliminated' });
+            }
+          });
+        } else {
+          res
+            .status(500)
+            .send({ message: "User not found" });
+        }
+      }
+    });
+  }
+}
+
+
 function reqResetPassword(req, res) {
   if (req.body.email != "") {
     var transporter = nodemailer.createTransport({
@@ -97,11 +125,11 @@ function reqResetPassword(req, res) {
   }
 }
 
-function replacePassword(req, res){
+function replacePassword(req, res) {
   let userEmail = req.body.email;
 
-  if(req.body.email != ""){
-    User.findOneAndUpdate({"email": userEmail}, { $set : req.body}, (err, userUpdated) => {
+  if (req.body.email != "") {
+    User.findOneAndUpdate({ "email": userEmail }, { $set: req.body }, (err, userUpdated) => {
       if (err) {
         res
           .status(500)
@@ -111,12 +139,13 @@ function replacePassword(req, res){
       }
     });
   }
- 
+
 }
 
 module.exports = {
   signUp,
   signIn,
+  deleteUser,
   reqResetPassword,
   replacePassword
 };
