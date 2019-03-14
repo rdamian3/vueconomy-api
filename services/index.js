@@ -27,6 +27,11 @@ function decodeToken(token) {
           status: 401,
           message: 'Token expired'
         });
+      } else {
+        reject({
+          status: 403,
+          message: 'Unauthorized'
+        });
       }
     }
   });
