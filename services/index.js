@@ -9,7 +9,7 @@ function createToken(user) {
     sub: user._id,
     iat: moment().unix(),
     exp: moment()
-      .add(14, 'days')
+      .add(14, 'seconds')
       .unix()
   };
 
@@ -19,20 +19,15 @@ function createToken(user) {
 function decodeToken(token) {
   const decoded = new Promise((resolve, reject) => {
     try {
-      const payload = jwt.decode(token, config.SECRET_TOKEN);
-
-      if (payload.exp <= moment().unix()) {
-        reject({
-          status: 401,
-          message: 'Token has expired'
-        });
-      }
+      jwt.decode(token, config.SECRET_TOKEN);
       resolve(payload.sub);
     } catch (err) {
-      reject({
-        status: 500,
-        message: 'Invalid Token'
-      });
+      if (err.message == 'Token expired') {
+        reject({
+          status: 401,
+          message: 'Token expired'
+        });
+      }
     }
   });
 
