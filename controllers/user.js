@@ -2,7 +2,7 @@
 
 const User = require('../models/user');
 const service = require('../services');
-const Utils = require('./utils');
+const nodemailer = require('nodemailer');
 
 function signUp(req, res) {
   const user = new User();
@@ -67,7 +67,33 @@ function signIn(req, res) {
   }
 }
 
+function reqResetPassword(){
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'rdamian3dev@gmail.com',
+      pass: '!Dd302010d'
+    }
+  });
+
+  var mailOptions = {
+    from: 'rdamian3@gmail.com',
+    to: 'damian.acevedo@conexiogroup.com',
+    subject: 'Sending Email using Node.js',
+    text: 'That was easy!'
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+
 module.exports = {
   signUp,
-  signIn
+  signIn,
+  reqResetPassword
 };
