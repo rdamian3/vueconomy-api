@@ -19,8 +19,17 @@ function createToken(user) {
 function decodeToken(token) {
   const decoded = new Promise((resolve, reject) => {
     try {
-      jwt.decode(token, config.SECRET_TOKEN);
-      resolve(payload.sub);
+      const payload = jwt.decode(token, config.SECRET_TOKEN);
+      if (payload && payload.exp <= moment().unix()) {
+        reject({
+          status: 401,
+          message: 'Token expired'
+        });
+      }
+      resolve({
+        status: 200,
+        message: 'Access granted'
+      });
     } catch (err) {
       if (err.message == 'Token expired') {
         reject({
