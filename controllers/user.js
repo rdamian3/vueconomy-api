@@ -95,6 +95,23 @@ function deleteUser(req, res) {
   }
 }
 
+function updateUser(req, res) {
+  let userId = req.body.userId;
+  let update = req.body;
+
+  if (userId != null) {
+    User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
+      if (err) {
+        res
+          .status(500)
+          .send({ message: `Error al actualizar el User: ${err}` });
+      } else {
+        res.status(200).send({ user: userUpdated });
+      }
+    });
+  }
+}
+
 
 function reqResetPassword(req, res) {
   if (req.body.email != "") {
@@ -129,7 +146,7 @@ function replacePassword(req, res) {
   let userEmail = req.body.email;
 
   if (req.body.email != "") {
-    User.findOneAndUpdate({ "email": userEmail }, { $set: req.body }, (err, userUpdated) => {
+    User.findOneAndUpdate({ "email": userEmail }, { $set: req.body }, {new: true}, (err, userUpdated) => {
       if (err) {
         res
           .status(500)
@@ -147,5 +164,6 @@ module.exports = {
   signIn,
   deleteUser,
   reqResetPassword,
-  replacePassword
+  replacePassword,
+  updateUser
 };

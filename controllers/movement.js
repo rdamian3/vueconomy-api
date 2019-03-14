@@ -56,7 +56,7 @@ function updateMovement(req, res) {
   let movementId = req.params.movementId;
   let update = req.body;
 
-  Movement.findByIdAndUpdate(movementId, update, (err, movementUpdated) => {
+  Movement.findByIdAndUpdate(movementId, update, {new: true}, (err, movementUpdated) => {
     if (err) {
       res
         .status(500)
