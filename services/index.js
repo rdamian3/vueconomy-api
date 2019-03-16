@@ -20,19 +20,28 @@ function decodeToken(token) {
   const decoded = new Promise((resolve, reject) => {
     try {
       const payload = jwt.decode(token, config.SECRET_TOKEN);
-
-      if (payload.exp <= moment().unix()) {
+      if (payload && payload.exp <= moment().unix()) {
         reject({
           status: 401,
-          message: 'Token has expired'
+          message: 'Token expired'
         });
       }
-      resolve(payload.sub);
-    } catch (err) {
-      reject({
-        status: 500,
-        message: 'Invalid Token'
+      resolve({
+        status: 200,
+        message: 'Access granted'
       });
+    } catch (err) {
+      if (err.message == 'Token expired') {
+        reject({
+          status: 401,
+          message: 'Token expired'
+        });
+      } else {
+        reject({
+          status: 403,
+          message: 'Unauthorized'
+        });
+      }
     }
   });
 

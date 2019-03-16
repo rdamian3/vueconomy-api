@@ -2,7 +2,8 @@
 
 const User = require('../models/user');
 const service = require('../services');
-const Utils = require('./utils');
+const nodemailer = require('nodemailer');
+const config = require('../config');
 
 function signUp(req, res) {
   const user = new User();
@@ -67,7 +68,102 @@ function signIn(req, res) {
   }
 }
 
+function deleteUser(req, res) {
+  if (req.body.userId != "") {
+    User.findById(req.body.userId, (err, user) => {
+      if (err) {
+        res.status(500).send({ message: `Error while deleting user: ${err}` });
+      } else {
+
+        if (user != null) {
+          user.remove(err => {
+            if (err) {
+              res
+                .status(500)
+                .send({ message: `Error while deleting user: ${err}` });
+            } else {
+              res.status(200).send({ message: 'User eliminated' });
+            }
+          });
+        } else {
+          res
+            .status(500)
+            .send({ message: "User not found" });
+        }
+      }
+    });
+  }
+}
+
+function updateUser(req, res) {
+  let userId = req.body.userId;
+  let update = req.body;
+
+  if (userId != null) {
+    User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
+      if (err) {
+        res
+          .status(500)
+          .send({ message: `Error al actualizar el User: ${err}` });
+      } else {
+        res.status(200).send({ user: userUpdated });
+      }
+    });
+  }
+}
+
+
+function reqResetPassword(req, res) {
+  if (req.body.email != "") {
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: config.emailUser,
+        pass: config.emailPassword
+      }
+    });
+
+    var mailOptions = {
+      from: 'rdamian3dev@gmail.com',
+      to: req.body.email,
+      subject: 'Reset your password',
+      html: `<strong>Password Reset</strong><br>
+        <p>Please use this link to reset your password</p><br>
+        <a href="google.com">Click here!</a>`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+  }
+}
+
+function replacePassword(req, res) {
+  let userEmail = req.body.email;
+
+  if (req.body.email != "") {
+    User.findOneAndUpdate({ "email": userEmail }, { $set: req.body }, {new: true}, (err, userUpdated) => {
+      if (err) {
+        res
+          .status(500)
+          .send({ message: `Error al actualizar el movemento: ${err}` });
+      } else {
+        res.status(200).send({ user: userUpdated });
+      }
+    });
+  }
+
+}
+
 module.exports = {
   signUp,
-  signIn
+  signIn,
+  deleteUser,
+  reqResetPassword,
+  replacePassword,
+  updateUser
 };

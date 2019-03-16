@@ -4,7 +4,7 @@ const services = require('../services');
 
 function isAuth(req, res, next) {
   if (!req.headers.authorization) {
-    return res.status(403).send({ message: 'No tienes autorización ' });
+    return res.status(403).send({ message: 'No tienes autorización' });
   }
 
   const token = req.headers.authorization;
@@ -16,7 +16,7 @@ function isAuth(req, res, next) {
       next();
     })
     .catch(response => {
-      res.status(response.status);
+      return res.status(response.status).send({message: response.message});
     });
 }
 
