@@ -14,8 +14,10 @@ api.delete('/movement/:movementId', auth, movementCtrl.deleteMovement);
 
 api.post('/signup', userCtrl.signUp);
 api.post('/signin', userCtrl.signIn);
-api.get('/private', auth, (req, res) => {
-  res.status(200).send({ message: 'Tienes acceso' });
-});
+api.delete('/deleteuser', auth, userCtrl.deleteUser);
+api.put('/updateuser', auth, userCtrl.updateUser);
+
+api.post('/resetpassword', userCtrl.reqResetPassword);
+api.post('/replacepassword', userCtrl.replacePassword);
 
 module.exports = api;
