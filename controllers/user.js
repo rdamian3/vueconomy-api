@@ -6,18 +6,19 @@ const nodemailer = require('nodemailer');
 const config = require('../config');
 
 function signUp(req, res) {
-  const user = new User();
-  user.email = req.body.email;
-  user.displayName = req.body.displayName;
-  user.password = req.body.password;
+  const user = new User({
+    email: req.body.email,
+    displayName: req.body.displayName,
+    password: req.body.password
+  });
 
-  if (user.email != '' || user.email != null) {
+  if (user.email != "" || user.email != null) {
     user.save(err => {
       if (err) {
         if (err.code == 11000) {
           return res
             .status(500)
-            .send('Error al crear el usuario: Usuario duplicado');
+            .send("Error al crear el usuario: Usuario duplicado");
         }
         return res.status(500).send({
           message: `Error al crear el usuario: ${err}`
@@ -30,7 +31,7 @@ function signUp(req, res) {
     });
   } else {
     res.status(500).send({
-      message: 'Error al crear el usuario'
+      message: "Error al crear el usuario"
     });
   }
 }
@@ -43,7 +44,7 @@ function signIn(req, res) {
       message: 'Falta usuario o contraseña...'
     });
   } else {
-    User.find(
+    User.findOne(
       {
         email: req.body.email
       },
@@ -57,11 +58,18 @@ function signIn(req, res) {
             message: 'No existe el usuario'
           });
         } else {
-          req.user = user;
-          res.status(200).send({
-            message: 'Te has logueado correctamente',
-            token: service.createToken(user)
-          });
+          user.comparePassword(pswd, user.password, (err, areEqual) => {
+            if (areEqual) {
+              res.status(200).send({
+                message: 'Te has logueado correctamente',
+                token: service.createToken(user)
+              });
+            } else {
+              return res.status(403).send({
+                message: 'Usuario o contraseña no válidos'
+              });
+            }
+          })
         }
       }
     );
