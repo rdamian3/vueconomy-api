@@ -3,11 +3,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+let CategorySchema = require('../models/category');
+
 const MovementSchema = Schema({
   amount: { type: Number, default: 0 },
   description: String,
-  category: { name: String, icon: String },
-  date: String,
+  category: [CategorySchema.schema],
+  type: Date,
   hasFinished: Boolean
 });
 
