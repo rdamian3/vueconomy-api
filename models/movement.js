@@ -6,6 +6,10 @@ const Schema = mongoose.Schema;
 let CategorySchema = require('../models/category');
 
 const MovementSchema = Schema({
+  author: {
+    type: String,
+    required: true
+  },
   amount: { type: Number, default: 0 },
   description: String,
   category: [CategorySchema.schema],

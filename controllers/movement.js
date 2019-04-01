@@ -20,7 +20,7 @@ function getMovement(req, res) {
 }
 
 function getMovements(req, res) {
-  Movement.find({}, (err, movements) => {
+  Movement.find({ author: req.params.userid }, (err, movements) => {
     if (err) {
       return res
         .status(500)
@@ -39,6 +39,7 @@ function saveMovement(req, res) {
       res.status(500).send({ message: `Error al borrar el movemento: ${err}` });
     } else {
       let movement = new Movement({
+        author: req.body.userid,
         amount: req.body.amount,
         description: req.body.description,
         category: cat,
