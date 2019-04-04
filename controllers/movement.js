@@ -1,6 +1,7 @@
 'use strict';
 
 const Movement = require('../models/movement');
+const Category = require('../models/category');
 
 function getMovement(req, res) {
   let movementId = req.params.movementId;
@@ -19,7 +20,7 @@ function getMovement(req, res) {
 }
 
 function getMovements(req, res) {
-  Movement.find({}, (err, movements) => {
+  Movement.find({ author: req.params.userid }, (err, movements) => {
     if (err) {
       return res
         .status(500)
@@ -33,21 +34,28 @@ function getMovements(req, res) {
 }
 
 function saveMovement(req, res) {
-  let movement = new Movement();
-  movement.amount = req.body.amount;
-  movement.description = req.body.description;
-  movement.category.name = req.body.category.name;
-  movement.category.icon = req.body.category.icon;
-  movement.date = req.body.date;
-  movement.owner = req.body.email;
-
-  movement.save((err, movementStored) => {
+  Category.findById(req.body.category, (err, cat) => {
     if (err) {
-      res
-        .status(500)
-        .send({ message: `Error al salvar en la base de datos: ${err} ` });
+      res.status(500).send({ message: `Error al borrar el movemento: ${err}` });
     } else {
-      res.status(200).send({ movement: movementStored });
+      let movement = new Movement({
+        author: req.body.userid,
+        amount: req.body.amount,
+        description: req.body.description,
+        category: cat,
+        date: req.body.date,
+        owner: req.body.email
+      });
+
+      movement.save((err, movementStored) => {
+        if (err) {
+          res
+            .status(500)
+            .send({ message: `Error al salvar en la base de datos: ${err} ` });
+        } else {
+          res.status(200).send({ movement: movementStored });
+        }
+      });
     }
   });
 }
@@ -56,15 +64,20 @@ function updateMovement(req, res) {
   let movementId = req.params.movementId;
   let update = req.body;
 
-  Movement.findByIdAndUpdate(movementId, update, {new: true}, (err, movementUpdated) => {
-    if (err) {
-      res
-        .status(500)
-        .send({ message: `Error al actualizar el movemento: ${err}` });
-    } else {
-      res.status(200).send({ movement: movementUpdated });
+  Movement.findByIdAndUpdate(
+    movementId,
+    update,
+    { new: true },
+    (err, movementUpdated) => {
+      if (err) {
+        res
+          .status(500)
+          .send({ message: `Error al actualizar el movemento: ${err}` });
+      } else {
+        res.status(200).send({ movement: movementUpdated });
+      }
     }
-  });
+  );
 }
 
 function deleteMovement(req, res) {
