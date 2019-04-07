@@ -12,7 +12,7 @@ const MovementSchema = Schema({
   },
   amount: { type: Number, default: 0 },
   description: String,
-  category: [CategorySchema.schema],
+  category: CategorySchema.schema,
   type: Date,
   hasFinished: Boolean
 });

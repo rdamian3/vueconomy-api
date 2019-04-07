@@ -8,12 +8,10 @@ function getMovement(req, res) {
 
   Movement.findById(movementId, (err, movement) => {
     if (err) {
-      return res
-        .status(500)
-        .send({ message: `Error al realizar la petición: ${err}` });
+      return res.status(500).send({ message: `Request error: ${err}` });
     }
     if (!movement) {
-      return res.status(404).send({ message: `El movemento no existe` });
+      return res.status(404).send({ message: 'Movement doesnt exists' });
     }
     res.status(200).send({ movement });
   });
@@ -24,10 +22,10 @@ function getMovements(req, res) {
     if (err) {
       return res
         .status(500)
-        .send({ message: `Error al realizar la petición: ${err}` });
+        .send({ message: `Error with the request: ${err}` });
     }
     if (!movements) {
-      return res.status(404).send({ message: 'No existen movementos' });
+      return res.status(404).send({ message: 'There are no movements' });
     }
     res.send(200, { movements });
   });
@@ -36,7 +34,7 @@ function getMovements(req, res) {
 function saveMovement(req, res) {
   Category.findById(req.body.category, (err, cat) => {
     if (err) {
-      res.status(500).send({ message: `Error al borrar el movemento: ${err}` });
+      res.status(500).send({ message: `Error saving the movement: ${err}` });
     } else {
       let movement = new Movement({
         author: req.body.userid,
@@ -47,13 +45,13 @@ function saveMovement(req, res) {
         owner: req.body.email
       });
 
-      movement.save((err, movementStored) => {
+      movement.save((err, movement) => {
         if (err) {
           res
             .status(500)
-            .send({ message: `Error al salvar en la base de datos: ${err} ` });
+            .send({ message: `Error saving in the database: ${err} ` });
         } else {
-          res.status(200).send({ movement: movementStored });
+          res.status(200).send({ movement });
         }
       });
     }
@@ -68,13 +66,11 @@ function updateMovement(req, res) {
     movementId,
     update,
     { new: true },
-    (err, movementUpdated) => {
+    (err, movement) => {
       if (err) {
-        res
-          .status(500)
-          .send({ message: `Error al actualizar el movemento: ${err}` });
+        res.status(500).send({ message: `Error updating movement: ${err}` });
       } else {
-        res.status(200).send({ movement: movementUpdated });
+        res.status(200).send({ movement });
       }
     }
   );
@@ -85,15 +81,13 @@ function deleteMovement(req, res) {
 
   Movement.findById(movementId, (err, movement) => {
     if (err) {
-      res.status(500).send({ message: `Error al borrar el movemento: ${err}` });
+      res.status(500).send({ message: `Error deleting movement: ${err}` });
     } else {
       movement.remove(err => {
         if (err) {
-          res
-            .status(500)
-            .send({ message: `Error al borrar el movemento: ${err}` });
+          res.status(500).send({ message: `Error deleting movement: ${err}` });
         } else {
-          res.status(200).send({ message: 'El movemento ha sido eliminado' });
+          res.status(200).send({ message: 'Movement deleted' });
         }
       });
     }

@@ -29,6 +29,44 @@ function addCategory(req, res) {
   }
 }
 
+function updateCategory(req, res) {
+  let categoryId = req.params.categoryId;
+  let update = req.body;
+
+  Category.findByIdAndUpdate(
+    categoryId,
+    update,
+    { new: true },
+    (err, category) => {
+      if (err) {
+        res.status(500).send({ message: `Error updating category: ${err}` });
+      } else {
+        res.status(200).send({ category });
+      }
+    }
+  );
+}
+
+function deleteMovement(req, res) {
+  let categoryId = req.params.categoryId;
+
+  Category.findById(categoryId, (err, category) => {
+    if (err) {
+      res.status(500).send({ message: `Error deleting category: ${err}` });
+    } else {
+      category.remove(err => {
+        if (err) {
+          res.status(500).send({ message: `Error deleting category: ${err}` });
+        } else {
+          res.status(200).send({ message: 'category deleted' });
+        }
+      });
+    }
+  });
+}
+
 module.exports = {
-  addCategory
+  addCategory,
+  updateCategory,
+  deleteMovement
 };
