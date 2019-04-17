@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
 
-const CategorySchema = require('../models/category');
-
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -22,22 +20,21 @@ const UserSchema = new Schema({
   signupDate: {
     type: Date,
     default: Date.now()
-  },
-  movements: CategorySchema.schema
+  }
 });
 
 UserSchema.pre('save', function(next) {
-  const usuario = this;
+  const user = this;
 
   bcrypt.genSalt(10, (err, salt) => {
     if (err) {
       next(err);
     }
-    bcrypt.hash(usuario.password, salt, null, (err, hash) => {
+    bcrypt.hash(user.password, salt, null, (err, hash) => {
       if (err) {
         next(err);
       }
-      usuario.password = hash;
+      user.password = hash;
       next();
     });
   });
