@@ -15,6 +15,10 @@ const CategorySchema = new Schema({
   },
   image: {
     type: String
+  },
+  author: {
+    type: String,
+    required: true
   }
 });
 

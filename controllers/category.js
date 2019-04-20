@@ -6,7 +6,8 @@ function addCategory(req, res) {
   const category = new Category({
     name: req.body.name,
     description: req.body.description,
-    image: req.body.image
+    image: req.body.image,
+    author: req.body.userId
   });
 
   if (category.name != '' || category.name != null) {
@@ -47,7 +48,7 @@ function updateCategory(req, res) {
   );
 }
 
-function deleteMovement(req, res) {
+function deleteCategory(req, res) {
   let categoryId = req.params.categoryId;
 
   Category.findById(categoryId, (err, category) => {
@@ -65,8 +66,23 @@ function deleteMovement(req, res) {
   });
 }
 
+function getCategories(req, res) {
+  Category.find({ author: req.param('userId') }, (err, categories) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ message: `Error with the request: ${err}` });
+    }
+    if (categories.length == 0) {
+      return res.status(404).send({ message: 'There are no categories' });
+    }
+    res.send(200, { categories });
+  });
+}
+
 module.exports = {
   addCategory,
   updateCategory,
-  deleteMovement
+  deleteCategory,
+  getCategories
 };
