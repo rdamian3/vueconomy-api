@@ -18,7 +18,7 @@ function getMovement(req, res) {
 }
 
 function getMovements(req, res) {
-  Movement.find({ author: req.params.userid }, (err, movements) => {
+  Movement.find({ author: req.param('userId') }, (err, movements) => {
     if (err) {
       return res
         .status(500)
@@ -41,8 +41,7 @@ function saveMovement(req, res) {
         amount: req.body.amount,
         description: req.body.description,
         category: cat,
-        date: req.body.date,
-        owner: req.body.email
+        date: req.body.date
       });
 
       movement.save((err, movement) => {
