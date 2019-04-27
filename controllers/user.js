@@ -125,32 +125,52 @@ function updateUser(req, res) {
 }
 
 function reqResetPassword(req, res) {
-  if (req.body.email != '') {
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: config.emailUser,
-        pass: config.emailPassword
-      }
-    });
+  if (req.body.email != '' && req.body.email != null) {
+    User.findOne(
+      {
+        email: req.body.email
+      },
+      (err, user) => {
+        if (err)
+          return res.status(500).send({
+            message: err
+          });
+        if (!user || user.length == 0) {
+          return res.status(404).send({
+            message: 'User doesnt exists'
+          });
+        } else {
+          var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: config.emailUser,
+              pass: config.emailPassword
+            }
+          });
 
-    var mailOptions = {
-      from: 'rdamian3dev@gmail.com',
-      to: req.body.email,
-      subject: 'Reset your password',
-      html: `<strong>Password Reset</strong><br>
-        <p>Please use this link to reset your password</p><br>
-        <a href="google.com">Click here!</a>`
-    };
+          var mailOptions = {
+            from: 'rdamian3dev@gmail.com',
+            to: user.email,
+            subject: 'Reset your password',
+            html: `<strong>Password Reset</strong><br>
+            <p>Hi ${user.displayName} </p><br>
+              <p>Please use this link to reset your password</p><br>
+              <a href="google.com">Click here!</a>`
+          };
 
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-        res.status(200).send({ message: 'Email sent' });
+          transporter.sendMail(mailOptions, function(error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+              res.status(200).send({ message: 'Email sent' });
+            }
+          });
+        }
       }
-    });
+    );
+  } else {
+    res.status(400).send({ message: 'No email provided' });
   }
 }
 
