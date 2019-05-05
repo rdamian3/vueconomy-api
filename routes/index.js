@@ -24,4 +24,6 @@ api.put('/updateuser', auth, userCtrl.updateUser);
 api.post('/resetpassword', userCtrl.reqResetPassword);
 api.post('/replacepassword', userCtrl.replacePassword);
 
+api.get('/hasauth', auth)
+
 module.exports = api;
