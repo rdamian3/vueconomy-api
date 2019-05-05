@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let CategorySchema = require('../models/category');
+const CategorySchema = require('../models/category');
 
 const MovementSchema = Schema({
   author: {

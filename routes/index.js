@@ -13,7 +13,8 @@ api.post('/movement', auth, movementCtrl.saveMovement);
 api.put('/movement/:movementId', auth, movementCtrl.updateMovement);
 api.delete('/movement/:movementId', auth, movementCtrl.deleteMovement);
 
-api.post('/category', categoryCtrl.addCategory);
+api.post('/category', auth, categoryCtrl.addCategory);
+api.get('/category', auth, categoryCtrl.getCategories);
 
 api.post('/signup', userCtrl.signUp);
 api.post('/signin', userCtrl.signIn);
