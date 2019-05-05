@@ -1,53 +1,59 @@
 'use strict';
 
 const Movement = require('../models/movement');
+const Category = require('../models/category');
 
 function getMovement(req, res) {
   let movementId = req.params.movementId;
 
   Movement.findById(movementId, (err, movement) => {
     if (err) {
-      return res
-        .status(500)
-        .send({ message: `Error al realizar la petición: ${err}` });
+      return res.status(500).send({ message: `Request error: ${err}` });
     }
     if (!movement) {
-      return res.status(404).send({ message: `El movemento no existe` });
+      return res.status(404).send({ message: 'Movement doesnt exists' });
     }
     res.status(200).send({ movement });
   });
 }
 
 function getMovements(req, res) {
-  Movement.find({}, (err, movements) => {
+  Movement.find({ author: req.params.userid }, (err, movements) => {
     if (err) {
       return res
         .status(500)
-        .send({ message: `Error al realizar la petición: ${err}` });
+        .send({ message: `Error with the request: ${err}` });
     }
     if (!movements) {
-      return res.status(404).send({ message: 'No existen movementos' });
+      return res.status(404).send({ message: 'There are no movements' });
     }
     res.send(200, { movements });
   });
 }
 
 function saveMovement(req, res) {
-  let movement = new Movement();
-  movement.amount = req.body.amount;
-  movement.description = req.body.description;
-  movement.category.name = req.body.category.name;
-  movement.category.icon = req.body.category.icon;
-  movement.date = req.body.date;
-  movement.owner = req.body.email;
-
-  movement.save((err, movementStored) => {
+  Category.findById(req.body.category, (err, cat) => {
     if (err) {
-      res
-        .status(500)
-        .send({ message: `Error al salvar en la base de datos: ${err} ` });
+      res.status(500).send({ message: `Error saving the movement: ${err}` });
     } else {
-      res.status(200).send({ movement: movementStored });
+      let movement = new Movement({
+        author: req.body.userid,
+        amount: req.body.amount,
+        description: req.body.description,
+        category: cat,
+        date: req.body.date,
+        owner: req.body.email
+      });
+
+      movement.save((err, movement) => {
+        if (err) {
+          res
+            .status(500)
+            .send({ message: `Error saving in the database: ${err} ` });
+        } else {
+          res.status(200).send({ movement });
+        }
+      });
     }
   });
 }
@@ -56,15 +62,18 @@ function updateMovement(req, res) {
   let movementId = req.params.movementId;
   let update = req.body;
 
-  Movement.findByIdAndUpdate(movementId, update, {new: true}, (err, movementUpdated) => {
-    if (err) {
-      res
-        .status(500)
-        .send({ message: `Error al actualizar el movemento: ${err}` });
-    } else {
-      res.status(200).send({ movement: movementUpdated });
+  Movement.findByIdAndUpdate(
+    movementId,
+    update,
+    { new: true },
+    (err, movement) => {
+      if (err) {
+        res.status(500).send({ message: `Error updating movement: ${err}` });
+      } else {
+        res.status(200).send({ movement });
+      }
     }
-  });
+  );
 }
 
 function deleteMovement(req, res) {
@@ -72,15 +81,13 @@ function deleteMovement(req, res) {
 
   Movement.findById(movementId, (err, movement) => {
     if (err) {
-      res.status(500).send({ message: `Error al borrar el movemento: ${err}` });
+      res.status(500).send({ message: `Error deleting movement: ${err}` });
     } else {
       movement.remove(err => {
         if (err) {
-          res
-            .status(500)
-            .send({ message: `Error al borrar el movemento: ${err}` });
+          res.status(500).send({ message: `Error deleting movement: ${err}` });
         } else {
-          res.status(200).send({ message: 'El movemento ha sido eliminado' });
+          res.status(200).send({ message: 'Movement deleted' });
         }
       });
     }

@@ -12,26 +12,31 @@ function signUp(req, res) {
     password: req.body.password
   });
 
-  if (user.email != "" || user.email != null) {
-    user.save(err => {
-      if (err) {
-        if (err.code == 11000) {
-          return res
-            .status(500)
-            .send("Error al crear el usuario: Usuario duplicado");
+  if (user.email != '' || user.email != null) {
+    if (user.email.length < 50) {
+      user.save(err => {
+        if (err) {
+          if (err.code == 11000) {
+            return res.status(500).send('Error creating user: duplicated user');
+          }
+          return res.status(500).send({
+            message: `Error creating user: ${err}`
+          });
+        } else {
+          return res.status(201).send({
+            token: service.createToken(user),
+            user
+          });
         }
-        return res.status(500).send({
-          message: `Error al crear el usuario: ${err}`
-        });
-      } else {
-        return res.status(201).send({
-          token: service.createToken(user)
-        });
-      }
-    });
+      });
+    } else {
+      res.status(500).send({
+        message: 'Too many characters for email: 50+'
+      });
+    }
   } else {
     res.status(500).send({
-      message: "Error al crear el usuario"
+      message: 'Error creating user'
     });
   }
 }
@@ -40,9 +45,7 @@ function signIn(req, res) {
   const email = req.body.email;
   const pswd = req.body.password;
   if (email == '' || pswd == '') {
-    res.status(401).send({
-      message: 'Falta usuario o contraseña...'
-    });
+    res.status(401).send({ message: 'User or password missing' });
   } else {
     User.findOne(
       {
@@ -55,21 +58,22 @@ function signIn(req, res) {
           });
         if (!user || user.length == 0) {
           return res.status(404).send({
-            message: 'No existe el usuario'
+            message: 'User doesnt exists'
           });
         } else {
           user.comparePassword(pswd, user.password, (err, areEqual) => {
             if (areEqual) {
               res.status(200).send({
-                message: 'Te has logueado correctamente',
-                token: service.createToken(user)
+                message: 'Logged in successfuly',
+                token: service.createToken(user),
+                user
               });
             } else {
               return res.status(403).send({
-                message: 'Usuario o contraseña no válidos'
+                message: 'Invalid user or password'
               });
             }
-          })
+          });
         }
       }
     );
@@ -77,12 +81,11 @@ function signIn(req, res) {
 }
 
 function deleteUser(req, res) {
-  if (req.body.userId != "") {
+  if (req.body.userId != '') {
     User.findById(req.body.userId, (err, user) => {
       if (err) {
         res.status(500).send({ message: `Error while deleting user: ${err}` });
       } else {
-
         if (user != null) {
           user.remove(err => {
             if (err) {
@@ -94,9 +97,7 @@ function deleteUser(req, res) {
             }
           });
         } else {
-          res
-            .status(500)
-            .send({ message: "User not found" });
+          res.status(500).send({ message: 'User not found' });
         }
       }
     });
@@ -108,21 +109,23 @@ function updateUser(req, res) {
   let update = req.body;
 
   if (userId != null) {
-    User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
-      if (err) {
-        res
-          .status(500)
-          .send({ message: `Error al actualizar el User: ${err}` });
-      } else {
-        res.status(200).send({ user: userUpdated });
+    User.findByIdAndUpdate(
+      userId,
+      update,
+      { new: true },
+      (err, userUpdated) => {
+        if (err) {
+          res.status(500).send({ message: `Error updating user: ${err}` });
+        } else {
+          res.status(200).send({ user: userUpdated });
+        }
       }
-    });
+    );
   }
 }
 
-
 function reqResetPassword(req, res) {
-  if (req.body.email != "") {
+  if (req.body.email != '') {
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -140,11 +143,12 @@ function reqResetPassword(req, res) {
         <a href="google.com">Click here!</a>`
     };
 
-    transporter.sendMail(mailOptions, function (error, info) {
+    transporter.sendMail(mailOptions, function(error, info) {
       if (error) {
         console.log(error);
       } else {
         console.log('Email sent: ' + info.response);
+        res.status(200).send({ message: 'Email sent' });
       }
     });
   }
@@ -153,18 +157,20 @@ function reqResetPassword(req, res) {
 function replacePassword(req, res) {
   let userEmail = req.body.email;
 
-  if (req.body.email != "") {
-    User.findOneAndUpdate({ "email": userEmail }, { $set: req.body }, {new: true}, (err, userUpdated) => {
-      if (err) {
-        res
-          .status(500)
-          .send({ message: `Error al actualizar el movemento: ${err}` });
-      } else {
-        res.status(200).send({ user: userUpdated });
+  if (req.body.email != '') {
+    User.findOneAndUpdate(
+      { email: userEmail },
+      { $set: req.body },
+      { new: true },
+      (err, userUpdated) => {
+        if (err) {
+          res.status(500).send({ message: `Error updating movement: ${err}` });
+        } else {
+          res.status(200).send({ user: userUpdated });
+        }
       }
-    });
+    );
   }
-
 }
 
 module.exports = {
