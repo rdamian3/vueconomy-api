@@ -16,7 +16,7 @@ function isAuth(req, res, next) {
       next();
     })
     .catch(response => {
-      return res.status(response.status).send({message: response.message});
+      return res.status(response.status).send({ message: response.message });
     });
 }
 
