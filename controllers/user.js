@@ -194,7 +194,7 @@ function replacePassword(req, res) {
 }
 
 function checkAuth(req, res) {
-  if (req.headers.authorization != null) {
+  if (req.user.status == 200) {
     res.status(200).send({ message: 'auth is valid' });
   } else {
     res.status(500).send({ message: 'You have no authorization' });

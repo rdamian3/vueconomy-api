@@ -20,10 +20,9 @@ api.post('/signup', userCtrl.signUp);
 api.post('/signin', userCtrl.signIn);
 api.delete('/deleteuser', auth, userCtrl.deleteUser);
 api.put('/updateuser', auth, userCtrl.updateUser);
+api.get('/hasauth', auth, userCtrl.checkAuth);
 
 api.post('/resetpassword', userCtrl.reqResetPassword);
 api.post('/replacepassword', userCtrl.replacePassword);
-
-api.get('/hasauth', auth, userCtrl.checkAuth);
 
 module.exports = api;
