@@ -11,7 +11,7 @@ api.get('/movement', auth, movementCtrl.getMovements);
 api.get('/movement/:movementId', movementCtrl.getMovement);
 api.post('/movement', auth, movementCtrl.saveMovement);
 api.put('/movement/:movementId', auth, movementCtrl.updateMovement);
-api.delete('/movement/:movementId', auth, movementCtrl.deleteMovement);
+api.delete('/movement/:movementId', movementCtrl.deleteMovement);
 
 api.post('/category', auth, categoryCtrl.addCategory);
 api.get('/category', auth, categoryCtrl.getCategories);
