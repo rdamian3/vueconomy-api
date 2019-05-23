@@ -13,7 +13,7 @@ const MovementSchema = Schema({
   amount: { type: Number, default: 0 },
   description: String,
   category: CategorySchema.schema,
-  type: Date,
+  date: Date,
   hasFinished: Boolean
 });
 
