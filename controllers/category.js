@@ -73,9 +73,6 @@ function getCategories(req, res) {
         .status(500)
         .send({ message: `Error with the request: ${err}` });
     }
-    if (categories.length == 0) {
-      return res.status(404).send({ message: 'There are no categories' });
-    }
     res.send(200, { categories });
   });
 }

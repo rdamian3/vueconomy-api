@@ -9,7 +9,7 @@ function createToken(user) {
     sub: user._id,
     iat: moment().unix(),
     exp: moment()
-      .add(14, 'days')
+      .add(1, 'hour')
       .unix()
   };
 
