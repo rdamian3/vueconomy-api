@@ -37,7 +37,7 @@ function saveMovement(req, res) {
       res.status(500).send({ message: `Error saving the movement: ${err}` });
     } else {
       let movement = new Movement({
-        author: req.body.userid,
+        author: req.body.userId,
         amount: req.body.amount,
         description: req.body.description,
         category: cat,
