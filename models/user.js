@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require("bcrypt-nodejs");
+const bcrypt = require('bcrypt-nodejs');
 
 const UserSchema = new Schema({
   email: {
@@ -20,10 +20,11 @@ const UserSchema = new Schema({
   signupDate: {
     type: Date,
     default: Date.now()
-  }
+  },
+  bucket: String
 });
 
-UserSchema.pre("save", function(next){
+UserSchema.pre('save', function(next) {
   const usuario = this;
 
   bcrypt.genSalt(10, (err, salt) => {
@@ -36,8 +37,8 @@ UserSchema.pre("save", function(next){
       }
       usuario.password = hash;
       next();
-    })
-  })
+    });
+  });
 });
 
 UserSchema.methods.comparePassword = function(password, hashPassword, cback) {
@@ -49,4 +50,4 @@ UserSchema.methods.comparePassword = function(password, hashPassword, cback) {
   });
 };
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model('User', UserSchema);

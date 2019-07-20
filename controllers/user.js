@@ -4,30 +4,35 @@ const User = require('../models/user');
 const service = require('../services');
 const nodemailer = require('nodemailer');
 const config = require('../config');
+const s3 = require('../services/s3');
 
 function signUp(req, res) {
-  const user = new User({
-    email: req.body.email,
-    displayName: req.body.displayName,
-    password: req.body.password
-  });
-
-  if (user.email != '' || user.email != null) {
-    if (user.email.length < 50) {
-      user.save(err => {
-        if (err) {
-          if (err.code == 11000) {
-            return res.status(500).send('Error creating user: duplicated user');
+  if (req.body.email != '' || req.body.email != null) {
+    if (req.body.email.length < 50) {
+      s3.createUserBucket(req.body.email).then(bucket => {
+        const user = new User({
+          email: req.body.email,
+          displayName: req.body.displayName,
+          password: req.body.password,
+          bucket
+        });
+        user.save(err => {
+          if (err) {
+            if (err.code == 11000) {
+              return res
+                .status(500)
+                .send('Error creating user: duplicated user');
+            }
+            return res.status(500).send({
+              message: `Error creating user: ${err}`
+            });
+          } else {
+            return res.status(201).send({
+              token: service.createToken(user),
+              user
+            });
           }
-          return res.status(500).send({
-            message: `Error creating user: ${err}`
-          });
-        } else {
-          return res.status(201).send({
-            token: service.createToken(user),
-            user
-          });
-        }
+        });
       });
     } else {
       res.status(500).send({
