@@ -3,11 +3,10 @@
 const services = require('../services');
 
 function isAuth(req, res, next) {
-  if (!req.headers.authorization) {
+  const token = req.headers.authorization;
+  if (!token) {
     return res.status(403).send({ message: 'No tienes autorización' });
   }
-
-  const token = req.headers.authorization;
 
   services
     .decodeToken(token)
@@ -16,7 +15,7 @@ function isAuth(req, res, next) {
       next();
     })
     .catch(response => {
-      return res.status(response.status).send({message: response.message});
+      return res.status(response.status).send({ message: response.message });
     });
 }
 

@@ -6,7 +6,6 @@ const Schema = mongoose.Schema;
 const CategorySchema = new Schema({
   name: {
     type: String,
-    unique: true,
     lowercase: true,
     required: true
   },
@@ -15,6 +14,10 @@ const CategorySchema = new Schema({
   },
   image: {
     type: String
+  },
+  author: {
+    type: String,
+    required: true
   }
 });
 
