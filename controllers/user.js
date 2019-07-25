@@ -134,7 +134,7 @@ function uploadData(req, res) {
       req.body = newObj;
       updateUser(req, res);
     })
-    .catch(e => {
+    .catch(() => {
       res.status(500).send({ message: "No se pudo agregar" });
     });
 }
