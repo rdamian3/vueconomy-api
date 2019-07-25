@@ -1,0 +1,7 @@
+{
+  "extends": "node",
+  "rules": {
+    "import/no-commonjs": 0,
+    "no-console": "off"
+  }
+}
