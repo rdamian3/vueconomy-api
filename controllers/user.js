@@ -89,6 +89,7 @@ function deleteUser(req, res) {
       if (err) {
         res.status(500).send({ message: `Error while deleting user: ${err}` });
       } else if (user !== null) {
+        s3.deleteBucket(user.bucket);
         user.remove(err => {
           if (err) {
             res
