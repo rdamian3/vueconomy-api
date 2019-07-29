@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const Category = require('../models/category');
+const Category = require("../models/category");
 
 function addCategory(req, res) {
   const category = new Category({
@@ -10,29 +10,28 @@ function addCategory(req, res) {
     author: req.body.userId
   });
 
-  if (category.name != '' || category.name != null) {
+  if (category.name !== "" || category.name !== null) {
     category.save(err => {
       if (err) {
-        if (err.code == 11000) {
-          return res.status(500).send('Duplicated category');
+        if (err.code === 11000) {
+          return res.status(500).send("Duplicated category");
         }
         return res.status(500).send({
           message: `Error creating category: ${err}`
         });
-      } else {
-        return res.status(201).send({ category });
       }
+      return res.status(201).send({ category });
     });
   } else {
     res.status(500).send({
-      message: 'Error creating category'
+      message: "Error creating category"
     });
   }
 }
 
 function updateCategory(req, res) {
-  let categoryId = req.params.categoryId;
-  let update = req.body;
+  const categoryId = req.params.categoryId;
+  const update = req.body;
 
   Category.findByIdAndUpdate(
     categoryId,
@@ -49,7 +48,7 @@ function updateCategory(req, res) {
 }
 
 function deleteCategory(req, res) {
-  let categoryId = req.params.categoryId;
+  const categoryId = req.headers.categoryid;
 
   Category.findById(categoryId, (err, category) => {
     if (err) {
@@ -59,7 +58,7 @@ function deleteCategory(req, res) {
         if (err) {
           res.status(500).send({ message: `Error deleting category: ${err}` });
         } else {
-          res.status(200).send({ message: 'category deleted' });
+          res.status(200).send({ message: "category deleted" });
         }
       });
     }
@@ -67,7 +66,7 @@ function deleteCategory(req, res) {
 }
 
 function getCategories(req, res) {
-  Category.find({ author: req.param('userId') }, (err, categories) => {
+  Category.find({ author: req.param("userId") }, (err, categories) => {
     if (err) {
       return res
         .status(500)
