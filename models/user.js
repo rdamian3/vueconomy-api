@@ -21,7 +21,8 @@ const UserSchema = new Schema({
   signupDate: {
     type: Date,
     default: Date.now()
-  }
+  },
+  bucket: String
 });
 
 UserSchema.pre('save', function(next) {

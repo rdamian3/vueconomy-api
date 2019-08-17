@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
 function checkUserNotNull(user) {
-    if (user) {
-        if (user.email != '' || user.email != null) {
-            return true;
-        }
+  if (user) {
+    if (user.email !== "" || user.email !== null) {
+      return true;
     }
-    return false;
-};
+  }
+  return false;
+}
 
 module.exports = {
-    checkUserNotNull
+  checkUserNotNull
 };
