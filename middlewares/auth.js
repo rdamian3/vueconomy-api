@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const services = require('../services');
+const services = require("../services");
 
 function isAuth(req, res, next) {
   const token = req.headers.authorization;
   if (!token) {
-    return res.status(403).send({ message: 'No tienes autorización' });
+    return res.status(403).send({ message: "No tienes autorización" });
   }
 
   services
@@ -14,9 +14,9 @@ function isAuth(req, res, next) {
       req.user = response;
       next();
     })
-    .catch(response => {
-      return res.status(response.status).send({ message: response.message });
-    });
+    .catch(response =>
+      res.status(response.status).send({ message: response.message })
+    );
 }
 
 module.exports = isAuth;

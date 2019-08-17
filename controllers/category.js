@@ -7,7 +7,7 @@ function addCategory(req, res) {
     name: req.body.name,
     description: req.body.description,
     image: req.body.image,
-    author: req.body.userId
+    author: req.user.userId
   });
 
   if (category.name !== "" || category.name !== null) {
@@ -66,7 +66,7 @@ function deleteCategory(req, res) {
 }
 
 function getCategories(req, res) {
-  Category.find({ author: req.param("userId") }, (err, categories) => {
+  Category.find({ author: req.user.userId }, (err, categories) => {
     if (err) {
       return res
         .status(500)
