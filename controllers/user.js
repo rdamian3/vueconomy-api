@@ -84,8 +84,8 @@ function signIn(req, res) {
 }
 
 function deleteUser(req, res) {
-  if (req.params.userId !== "") {
-    User.findById(req.params.userId, (err, user) => {
+  if (req.user.userId !== "") {
+    User.findById(req.user.userId, (err, user) => {
       if (err) {
         res.status(500).send({ message: `Error while deleting user: ${err}` });
       } else if (user !== null) {
@@ -107,7 +107,7 @@ function deleteUser(req, res) {
 }
 
 function updateUser(req, res) {
-  const userId = req.body.userId;
+  const userId = req.user.userId;
   const update = req.body;
 
   if (userId !== null) {

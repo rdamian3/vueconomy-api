@@ -1,31 +1,31 @@
-'use strict';
+"use strict";
 
-const Movement = require('../models/movement');
-const Category = require('../models/category');
+const Movement = require("../models/movement");
+const Category = require("../models/category");
 
 function getMovement(req, res) {
-  let movementId = req.params.movementId;
+  const movementId = req.params.movementId;
 
   Movement.findById(movementId, (err, movement) => {
     if (err) {
       return res.status(500).send({ message: `Request error: ${err}` });
     }
     if (!movement) {
-      return res.status(404).send({ message: 'Movement doesnt exists' });
+      return res.status(404).send({ message: "Movement doesnt exists" });
     }
     res.status(200).send({ movement });
   });
 }
 
 function getMovements(req, res) {
-  Movement.find({ author: req.param('userId') }, (err, movements) => {
+  Movement.find({ author: req.user.userId }, (err, movements) => {
     if (err) {
       return res
         .status(500)
         .send({ message: `Error with the request: ${err}` });
     }
     if (!movements) {
-      return res.status(404).send({ message: 'There are no movements' });
+      return res.status(404).send({ message: "There are no movements" });
     }
     res.send(200, { movements });
   });
@@ -36,8 +36,8 @@ function saveMovement(req, res) {
     if (err) {
       res.status(500).send({ message: `Error saving the movement: ${err}` });
     } else {
-      let movement = new Movement({
-        author: req.body.userId,
+      const movement = new Movement({
+        author: req.user.userId,
         amount: req.body.amount,
         description: req.body.description,
         category: cat,
@@ -58,8 +58,8 @@ function saveMovement(req, res) {
 }
 
 function updateMovement(req, res) {
-  let movementId = req.params.movementId;
-  let update = req.body;
+  const movementId = req.params.movementId;
+  const update = req.body;
 
   Movement.findByIdAndUpdate(
     movementId,
@@ -76,7 +76,7 @@ function updateMovement(req, res) {
 }
 
 function deleteMovement(req, res) {
-  let movementId = req.params.movementId;
+  const movementId = req.params.movementId;
 
   Movement.findById(movementId, (err, movement) => {
     if (err) {
@@ -86,7 +86,7 @@ function deleteMovement(req, res) {
         if (err) {
           res.status(500).send({ message: `Error deleting movement: ${err}` });
         } else {
-          res.status(200).send({ message: 'Movement deleted' });
+          res.status(200).send({ message: "Movement deleted" });
         }
       });
     }
