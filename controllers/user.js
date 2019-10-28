@@ -9,28 +9,25 @@ const s3 = require("../services/s3");
 function signUp(req, res) {
   if (req.body.email !== "" || req.body.email !== null) {
     if (req.body.email.length < 50) {
-      s3.createUserBucket(req.body.email).then(bucket => {
-        const user = new User({
-          email: req.body.email,
-          displayName: req.body.displayName,
-          password: req.body.password,
-          bucket
-        });
-        user.save(err => {
-          if (err) {
-            if (err.code === 11000) {
-              return res
-                .status(500)
-                .send("Error creating user: duplicated user");
-            }
-            return res.status(500).send({
-              message: `Error creating user: ${err}`
-            });
+      const userFolder = s3.createUserFolder(req.body.email);
+      const user = new User({
+        email: req.body.email,
+        displayName: req.body.displayName,
+        password: req.body.password,
+        bucket: "vueconomybucket/" + userFolder
+      });
+      user.save(err => {
+        if (err) {
+          if (err.code === 11000) {
+            return res.status(500).send("Error creating user: duplicated user");
           }
-          return res.status(201).send({
-            token: service.createToken(user),
-            user
+          return res.status(500).send({
+            message: `Error creating user: ${err}`
           });
+        }
+        return res.status(201).send({
+          token: service.createToken(user),
+          user
         });
       });
     } else {
