@@ -14,7 +14,7 @@ function signUp(req, res) {
         email: req.body.email,
         displayName: req.body.displayName,
         password: req.body.password,
-        bucket: "vueconomybucket/" + userFolder
+        bucket: config.bucket + userFolder
       });
       user.save(err => {
         if (err) {
