@@ -14,6 +14,11 @@ async function createUserBucket(username) {
   return bucketName;
 }
 
+function createUserFolder(username) {
+  const user = username.split("@", 1);
+  return user + uuid.v4();
+}
+
 function uploadToBucket(req, res) {
   const userId = req.headers.userid;
   return new Promise((resolve, reject) => {
@@ -62,6 +67,7 @@ function deleteBucket(bucket) {
 
 module.exports = {
   createUserBucket,
+  createUserFolder,
   uploadToBucket,
   deleteBucket
 };
