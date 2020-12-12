@@ -4,8 +4,7 @@
   "description": "API-REST for Vueconomy",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js  ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js --exec babel-node"
   },
   "author": "Damián Acevedo",
   "license": "MIT",
@@ -27,6 +26,10 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
     "@types/express": "^4.17.0",
     "@types/node": "^12.6.8",
     "eslint-config-node": "^4.0.0",
