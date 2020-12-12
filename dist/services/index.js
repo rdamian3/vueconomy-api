@@ -1,55 +1,55 @@
-"use strict";
+'use strict';
 
-const jwt = require("jwt-simple");
-const moment = require("moment");
-const config = require("../config");
+var jwt = require('jwt-simple');
+
+var moment = require('moment');
+
+var config = require('../../config');
 
 function createToken(user) {
-  const payload = {
+  var payload = {
     sub: user._id,
     iat: moment().unix(),
-    exp: moment()
-      .add(1, "hour")
-      .unix()
+    exp: moment().add(1, 'hour').unix()
   };
-
   return jwt.encode(payload, config.SECRET_TOKEN);
 }
 
 function decodeToken(token) {
-  const decoded = new Promise((resolve, reject) => {
+  var decoded = new Promise(function (resolve, reject) {
     try {
-      const payload = jwt.decode(token, config.SECRET_TOKEN);
+      var payload = jwt.decode(token, config.SECRET_TOKEN);
+
       if (payload && payload.exp <= moment().unix()) {
         reject({
           status: 401,
-          message: "Token expired"
+          message: 'Token expired'
         });
       }
+
       resolve({
         status: 200,
-        message: "Access granted",
+        message: 'Access granted',
         userId: payload.sub
       });
     } catch (err) {
-      if (err.message === "Token expired") {
+      if (err.message === 'Token expired') {
         reject({
           status: 401,
-          message: "Token expired"
+          message: 'Token expired'
         });
       } else {
         reject({
           status: 403,
-          message: "Unauthorized"
+          message: 'Unauthorized'
         });
       }
     }
   });
-
   return decoded;
 }
 
 module.exports = {
-  createToken,
-  decodeToken
+  createToken: createToken,
+  decodeToken: decodeToken
 };

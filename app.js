@@ -1,18 +1,17 @@
-"use strict";
+'use strict';
 
 import express from 'express';
 import { urlencoded, json } from 'body-parser';
-import hbs from 'express-handlebars';
 import cors from 'cors';
 const app = express();
-import api from './routes';
+import api from './src/routes';
 import morgan from 'morgan';
 
 app.set('port', process.env.PORT || 3001);
 
 app.use(cors());
 
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 
 app.use(
   urlencoded({
@@ -22,18 +21,10 @@ app.use(
 
 app.use(json());
 
-app.engine(
-  '.hbs',
-  hbs({
-    defaultLayout: 'default',
-    extname: '.hbs',
-  })
-);
 app.set('view engine', '.hbs');
 
-app.use(bodyParser.json());
+app.use(json());
 
-
-app.use("/api", api);
+app.use('/api', api);
 
 export default app;
