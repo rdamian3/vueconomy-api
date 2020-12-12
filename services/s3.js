@@ -22,12 +22,12 @@ function createUserFolder(username) {
 function uploadToBucket(req, res) {
   const userId = req.headers.userid;
   return new Promise((resolve, reject) => {
-    const bucketname = req.headers.bucket;
+    const folderName = req.headers.bucket;
     const s3 = new AWS.S3();
     const upload = multer({
       storage: multerS3({
         s3,
-        bucket: bucketname,
+        bucket: "vueconomybucket/" + folderName,
         acl: "public-read",
         metadata(req, file, cb) {
           cb(null, { fieldName: file.fieldname });

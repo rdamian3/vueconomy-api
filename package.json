@@ -15,7 +15,6 @@
     "cors": "^2.8.5",
     "crypto": "0.0.3",
     "express": "^4.14.0",
-    "express-handlebars": "^3.0.0",
     "jwt-simple": "^0.5.1",
     "moment": "^2.16.0",
     "mongoose": "^5.4.19",

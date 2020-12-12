@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import express from 'express';
 import { urlencoded, json } from 'body-parser';
@@ -12,7 +12,7 @@ app.set('port', process.env.PORT || 3001);
 
 app.use(cors());
 
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 app.use(
   urlencoded({
@@ -31,12 +31,9 @@ app.engine(
 );
 app.set('view engine', '.hbs');
 
-app.use('/api', api);
-app.get('/login', (req, res) => {
-  res.render('login');
-});
-app.get('/', (req, res) => {
-  res.render('login');
-});
+app.use(bodyParser.json());
+
+
+app.use("/api", api);
 
 export default app;
