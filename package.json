@@ -4,7 +4,8 @@
   "description": "API-REST for Vueconomy",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --exec babel-node"
+    "start": "node index.js",
+    "start:dev": "nodemon index.js --exec babel-node"
   },
   "author": "Damián Acevedo",
   "license": "MIT",
