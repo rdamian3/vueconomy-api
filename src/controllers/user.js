@@ -3,7 +3,7 @@
 const User = require('../models/user');
 const service = require('../services');
 const nodemailer = require('nodemailer');
-const config = require('../../config');
+const config = require('../config');
 const s3 = require('../services/s3');
 
 function signUp(req, res) {

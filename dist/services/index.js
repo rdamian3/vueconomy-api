@@ -4,7 +4,7 @@ var jwt = require('jwt-simple');
 
 var moment = require('moment');
 
-var config = require('../../config');
+var config = require('../config');
 
 function createToken(user) {
   var payload = {

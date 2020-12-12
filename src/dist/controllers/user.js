@@ -12,7 +12,7 @@ var service = require('../services');
 
 var nodemailer = require('nodemailer');
 
-var config = require('../config');
+var config = require('../../config');
 
 var s3 = require('../services/s3');
 

@@ -4,7 +4,7 @@
   "description": "API-REST for Vueconomy",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js --exec babel-node",
+    "dev": "nodemon src/index.js --exec babel-node",
     "build": "babel src --out-dir dist",
     "start": "node dist/index.js"
   },

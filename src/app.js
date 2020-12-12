@@ -4,7 +4,7 @@ import express from 'express';
 import { urlencoded, json } from 'body-parser';
 import cors from 'cors';
 const app = express();
-import api from './src/routes';
+import api from './routes';
 import morgan from 'morgan';
 
 app.set('port', process.env.PORT || 3001);
