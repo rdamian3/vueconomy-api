@@ -1,21 +1,19 @@
-"use strict";
+import { set, connect } from 'mongoose';
+import app from './app';
+import { db } from './config';
 
-const mongoose = require("mongoose");
-const app = require("./app");
-const config = require("./config");
+set('useFindAndModify', false);
 
-mongoose.set("useFindAndModify", false);
-mongoose.connect(
-  config.db,
-  { useCreateIndex: true, useNewUrlParser: true },
-  err => {
+connect(
+  db,
+  { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
     if (err) {
       return console.log(`Error al conectar a la base de datos: ${err}`);
     }
-    console.log("Conexión a la base de datos establecida...");
-
-    app.listen(config.port, () => {
-      console.log(`API REST corriendo en http://localhost:${config.port}`);
+    console.log('Conexión a la base de datos establecida...');
+    app.listen(app.get('port'), () => {
+      console.log(`API REST corriendo en http://localhost:${app.get('port')}`);
     });
   }
 );

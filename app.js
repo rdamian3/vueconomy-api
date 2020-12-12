@@ -1,24 +1,39 @@
 "use strict";
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import express from 'express';
+import { urlencoded, json } from 'body-parser';
+import hbs from 'express-handlebars';
+import cors from 'cors';
 const app = express();
-const api = require("./routes");
-const morgan = require("morgan");
+import api from './routes';
+import morgan from 'morgan';
+
+app.set('port', process.env.PORT || 3001);
 
 app.use(cors());
 
 app.use(morgan("dev"));
 
 app.use(
-  bodyParser.urlencoded({
-    extended: false
+  urlencoded({
+    extended: false,
   })
 );
 
+app.use(json());
+
+app.engine(
+  '.hbs',
+  hbs({
+    defaultLayout: 'default',
+    extname: '.hbs',
+  })
+);
+app.set('view engine', '.hbs');
+
 app.use(bodyParser.json());
+
 
 app.use("/api", api);
 
-module.exports = app;
+export default app;
